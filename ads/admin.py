@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from ads.models import Ads, Category
+from ads.models import Ads
 
 admin.site.register(Ads)
-admin.site.register(Category)
