@@ -20,3 +20,7 @@ class User(models.Model):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    @property
+    def location(self):
+        return self.location_id.name if self.location_id else None

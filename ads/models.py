@@ -19,3 +19,9 @@ class Ads(models.Model):
     class Meta:
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
+
+    def author(self):
+        return self.author_id.first_name+' '+self.author_id.last_name if self.author_id else None
+
+    def ads_category(self):
+        return self.category.name if self.category else None

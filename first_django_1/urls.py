@@ -15,14 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
 
 from ads import views
+from location.views import LocationViewSet
+
+router = routers.SimpleRouter()
+router.register('location', LocationViewSet)
 
 urlpatterns = [
     path('', views.index),
     path('admin/', admin.site.urls),
+    path('test_drf/', include('rest_framework.urls')),
     path('ad/', include('ads.urls')),
     path('cat/', include('category.urls')),
     path('user/', include('user.urls')),
 
 ]
+
+urlpatterns += router.urls
