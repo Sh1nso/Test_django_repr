@@ -5,41 +5,29 @@ from user.models import User
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    #location_id = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+    locations = serializers.SlugRelatedField(
+        required=False,
+        many=True,
+        queryset=Location.objects.all(),
+        slug_field='name'
+    )
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'role', 'age']
+        fields = '__all__'
 
     def is_valid(self, raise_exception=False):
-        print(self.initial_data)
-        self._locations = self.initial_data["location_id"]
+        self._locations = self.initial_data.pop("locations")
         return super().is_valid(raise_exception=raise_exception)
 
     def save(self):
         user = super().save()
-        obj, _ = Location.objects.get_or_create(name=self._locations)
-        print(obj)
 
-        user.location = obj
+        for locations in self._locations:
+            obj, _ = Location.objects.get_or_create(name=locations)
+            user.locations.add(obj)
 
         return user
-
-    # def is_valid(self, raise_exception=False):
-    #     self._locations = self.initial_data.pop("location_id")
-    #     return super().is_valid(raise_exception=raise_exception)
-    #
-    # def save(self):
-    #     user = super().save()
-    #
-    #     for locations in self._locations:
-    #         obj, _ = Location.objects.get_or_create(name=locations)
-    #         user.locations.add(obj)
-    #
-    #     user.set_password(user.password)
-    #     user.save()
-    #
-    #     return user
 
 
 class UserListSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=50, blank=False, default='member', choices=ROLES)
     age = models.IntegerField()
-    location_id = models.ForeignKey(Location, on_delete=models.CASCADE)
+    locations = models.ManyToManyField(Location)
 
     class Meta:
         verbose_name = 'Пользователь'
