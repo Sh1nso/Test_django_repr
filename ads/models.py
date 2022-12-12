@@ -21,7 +21,13 @@ class Ads(models.Model):
         verbose_name_plural = 'Объявления'
 
     def author(self):
-        return self.author_id.first_name+' '+self.author_id.last_name if self.author_id else None
+        return self.author_id.first_name + ' ' + self.author_id.last_name if self.author_id else None
 
     def ads_category(self):
         return self.category.name if self.category else None
+
+
+class AdsCompilation(models.Model):
+    name = models.CharField(max_length=500)
+    items = models.ManyToManyField(Ads)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)

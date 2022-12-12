@@ -5,12 +5,11 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, UpdateView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from ads.models import Ads
 from ads.serializers import AdsListViewSerializer, AdsCreateSerializer, AdsRetrieveSerializer, AdsUpdateSerializer, \
     AdsDestroySerializer
-from category.models import Category
-from user.models import User
 
 
 def index(request):
@@ -55,6 +54,7 @@ class AdsCreateView(CreateAPIView):
 class AdsDetailView(RetrieveAPIView):
     queryset = Ads.objects.all()
     serializer_class = AdsRetrieveSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class AdsPatchView(UpdateAPIView):
