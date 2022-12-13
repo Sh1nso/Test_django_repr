@@ -3,13 +3,15 @@ import json
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DeleteView, UpdateView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
+from django.views.generic import UpdateView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from ads.models import Ads
+from ads.models import Ads, AdsCompilation
+from ads.permissions import AuthorAllStaffAllButEditOrReadOnly
 from ads.serializers import AdsListViewSerializer, AdsCreateSerializer, AdsRetrieveSerializer, AdsUpdateSerializer, \
-    AdsDestroySerializer
+    AdsDestroySerializer, AdsCompilationSerializer, AdsCompilationCreateSerializer, AdsCompilationRetrieveSerializer, \
+    AdsCompilationUpdateSerializer, AdsCompilationDestroySerializer
 
 
 def index(request):
@@ -60,11 +62,41 @@ class AdsDetailView(RetrieveAPIView):
 class AdsPatchView(UpdateAPIView):
     queryset = Ads.objects.all()
     serializer_class = AdsUpdateSerializer
+    permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
 
 
-class AdsDeleteView(DeleteView):
+class AdsDeleteView(DestroyAPIView):
     queryset = Ads.objects.all()
     serializer_class = AdsDestroySerializer
+    permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
+
+
+class AdsCompilationListView(ListAPIView):
+    queryset = AdsCompilation.objects.all()
+    serializer_class = AdsCompilationSerializer
+
+
+class AdsCompilationRetrieveView(RetrieveAPIView):
+    queryset = AdsCompilation.objects.all()
+    serializer_class = AdsCompilationRetrieveSerializer
+
+
+class AdsCompilationCreateView(CreateAPIView):
+    queryset = AdsCompilation.objects.all()
+    serializer_class = AdsCompilationCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class AdsCompilationUpdateView(UpdateAPIView):
+    queryset = AdsCompilation.objects.all()
+    serializer_class = AdsCompilationUpdateSerializer
+    permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
+
+
+class AdsCompilationDestroyView(DestroyAPIView):
+    queryset = AdsCompilation.objects.all()
+    serializer_class = AdsCompilationDestroySerializer
+    permission_classes = [IsAuthenticated]
 
 
 @method_decorator(csrf_exempt, name='dispatch')

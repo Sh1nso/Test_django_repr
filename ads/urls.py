@@ -10,4 +10,10 @@ urlpatterns = [
     path('create/', views.AdsCreateView.as_view()),
     path('<int:pk>/update/', views.AdsPatchView.as_view()),
     path('<int:pk>/image/', views.AdsPatchImageView.as_view()),
+    path('compilation/', views.AdsCompilationListView.as_view()),
+    path('compilation/<int:pk>/', views.AdsCompilationRetrieveView.as_view()),
+    path('compilation/create/', views.AdsCompilationCreateView.as_view()),
+    path('compilation/<int:pk>/update/', views.AdsCompilationUpdateView.as_view()),
+    path('compilation/<int:pk>/delete/', views.AdsCompilationDestroyView.as_view()),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

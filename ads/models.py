@@ -1,4 +1,5 @@
 from django.db import models
+from django.http import JsonResponse
 
 from category.models import Category
 from user.models import User
@@ -9,8 +10,8 @@ class Ads(models.Model):
     author_id = models.ForeignKey(User, on_delete=models.CASCADE, default='')
     price = models.DecimalField(max_digits=15, decimal_places=2)
     description = models.CharField(max_length=500)
-    is_published = models.BooleanField(blank=True)
-    image = models.ImageField(upload_to='images/')
+    is_published = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='images/', default='')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default='')
 
     def __str__(self):
@@ -30,4 +31,7 @@ class Ads(models.Model):
 class AdsCompilation(models.Model):
     name = models.CharField(max_length=500)
     items = models.ManyToManyField(Ads)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+    owner_id = models.ForeignKey(User, on_delete=models.CASCADE, default='')
+
+    def owner(self):
+        return self.owner_id.username if self.owner_id else None
