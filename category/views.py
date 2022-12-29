@@ -1,5 +1,6 @@
 import json
 
+from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -40,10 +41,16 @@ class CategoryCreateView(CreateView):
     def post(self, request, *args, **kwargs) -> json:
         data = json.loads(request.body)
 
-        category = Category.objects.create(name=data.get('name'))
+        category = Category.objects.create(name=data.get('name'),
+                                           slug=data.get('slug'))
+        # try:
+        #     category.full_clean()
+        # except ValidationError:
+        #     return ValidationError(f"value does not match")
 
         return JsonResponse({'id': category.id,
-                             'name': category.name})
+                             'name': category.name,
+                             'slug': category.slug})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
